@@ -25,7 +25,7 @@ Working with this project requires the following technologies:
 1. `kubectl apply -f jobs.yaml`
 1. `kubectl apply -f chairfront/kubernetes.yaml`
 1. `kubectl apply -f admin/kubernetes.yaml`
-1. `minikube tunnel` (in a seprate terminal window)
+1. `minikube tunnel` (in a separate terminal window)
 
 You should now be able to use commands like `kubectl get svc` to see the public ips of the two java services (e.g. localhost:8001).
 

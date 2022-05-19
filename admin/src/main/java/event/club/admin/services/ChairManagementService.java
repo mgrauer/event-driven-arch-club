@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +60,21 @@ public class ChairManagementService {
 
         log.info("Chair {} successfully saved, updating downstream...", saved.getId());
         log.info("Calling chairfront at {}", chairfrontLocation);
-        ResponseEntity<Boolean> result = client.postForEntity(chairfrontLocation+"/register", target, Boolean.class);
-        log.info("Did we save from chairfront? {}", result.getStatusCode());
+
+        Observable.fromCallable(() -> {
+                    ResponseEntity<Boolean> result = client.postForEntity(chairfrontLocation+"/register", target, Boolean.class);
+                    log.info("Observable: did we save from chairfront? {}", result.getStatusCode());
+                    return result.getStatusCode();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
+                .subscribe(System.out::println, Throwable::printStackTrace);
+
+
+
+
+
+
         return saved;
 
     }
